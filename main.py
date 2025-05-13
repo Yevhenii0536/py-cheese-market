@@ -6,7 +6,7 @@ from routes import cheese
 
 app = FastAPI()
 
-app.include_router(cheese.router)
+app.include_router(cheese.router, tags=["Cheese types"])
 
 
 @app.get("/", include_in_schema=False)
