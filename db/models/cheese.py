@@ -1,6 +1,6 @@
 from enum import StrEnum, auto
 
-from sqlalchemy import Column, Integer, String, Float, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Enum, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 
 from db.engine import Base
@@ -20,6 +20,8 @@ class CheeseType(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, unique=True)
     description = Column(String(511), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     cheeses = relationship("Cheese", back_populates="cheese_type")
 
@@ -32,6 +34,8 @@ class Cheese(Base):
     title = Column(String(255), nullable=False, unique=True)
     price = Column(Float, nullable=False)
     packaging_type = Column(Enum(PackagingType), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     cheese_type_id = Column(
         Integer,
