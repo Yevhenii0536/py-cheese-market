@@ -1,4 +1,6 @@
 from crud.cheese.create import (
+    create_cheese_db as cheese_create,
+    read_cheese_db as cheese_read,
     create_cheese_type_db as types_create,
     read_cheese_types_db as types_read,
     update_cheese_type_db as types_update,
@@ -12,6 +14,7 @@ from sqlalchemy.orm import Session
 from db.engine import get_db
 
 from schemas.cheese.type import CheeseTypeCreate, CheeseTypeRead, CheeseTypeUpdate
+from schemas.cheese.cheese import CheeseCreate, CheeseRead
 
 from typing import List
 
@@ -20,6 +23,16 @@ router = APIRouter()
 
 TYPES_PATH = "/cheese_types"
 CHEESE_PATH = "/cheese"
+
+
+@router.post(CHEESE_PATH, response_model=CheeseRead)
+def create_cheese(cheese: CheeseCreate, db: Session = Depends(get_db)):
+    return cheese_create(db=db, cheese=cheese)
+
+
+@router.get(CHEESE_PATH, response_model=List[CheeseRead])
+def get_cheese(db: Session = Depends(get_db)):
+    return cheese_read(db=db)
 
 
 @router.post(TYPES_PATH, response_model=CheeseTypeRead)
